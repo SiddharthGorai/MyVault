@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userprofile">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:elevation="6dp"
+        android:src="@drawable/baseline_add_24"
+        app:backgroundTint="#42E9EF"
+        app:backgroundTintMode="add"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96"
+        app:pressedTranslationZ="12dp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addPDF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:elevation="6dp"
+        android:foreground="@drawable/baseline_picture_as_pdf_24"
+        android:foregroundTint="#F10A0A"
+        app:backgroundTint="#F8FAFA"
+        app:backgroundTintMode="add"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintEnd_toEndOf="@+id/addButton"
+        app:layout_constraintStart_toStartOf="@+id/addButton"
+        app:layout_constraintTop_toBottomOf="@+id/addImg"
+        android:visibility="invisible"
+        app:pressedTranslationZ="12dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:elevation="6dp"
+        android:foreground="@drawable/baseline_image_24"
+        android:foregroundTint="#009688"
+        app:backgroundTint="#FBF5F5"
+        app:backgroundTintMode="add"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/addButton"
+        app:layout_constraintEnd_toEndOf="@+id/addButton"
+        app:layout_constraintStart_toStartOf="@+id/addButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.87"
+        app:pressedTranslationZ="12dp"
+        android:visibility="invisible"
+        app:rippleColor="#FBF6F6" />
+
+    <Button
+        android:id="@+id/btnPdf"
+        android:layout_width="202dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="64dp"
+        android:backgroundTint="#FC1DB5FA"
+        android:text="PDF"
+        android:textSize="20sp"
+        app:icon="@drawable/baseline_picture_as_pdf_24"
+        app:iconTint="#E1F60909"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.277"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnImg"
+        android:layout_width="202dp"
+        android:layout_height="72dp"
+        android:backgroundTint="#FC1DB5FA"
+        android:text="Images"
+        android:textSize="20sp"
+        app:icon="@drawable/baseline_image_24"
+        app:iconTint="#023E38"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnPdf"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btnPdf"
+        app:layout_constraintTop_toBottomOf="@+id/btnPdf"
+        app:layout_constraintVertical_bias="0.043"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

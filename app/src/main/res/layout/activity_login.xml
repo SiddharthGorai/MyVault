@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".loginActivity"
+    android:background="@drawable/backgroundd">
+
+
+    <EditText
+        android:id="@+id/lEmail"
+        android:layout_width="231dp"
+        android:layout_height="43dp"
+        android:drawableLeft="@drawable/ic_baseline_email_24"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="@string/email_id"
+        android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.274" />
+
+    <EditText
+        android:id="@+id/lPass"
+        style="@android:style/Widget.DeviceDefault.AutoCompleteTextView"
+        android:layout_width="231dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="40dp"
+        android:drawableLeft="@drawable/ic_baseline_lock_24"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/lEmail"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/lEmail"
+        app:layout_constraintTop_toBottomOf="@+id/lEmail"
+        app:layout_constraintVertical_bias="0.063"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/lButton"
+        android:layout_width="96dp"
+        android:layout_height="49dp"
+        android:backgroundTint="#E287275D"
+        android:text="@string/login"
+        app:cornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/lPass"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/lPass"
+        app:layout_constraintTop_toBottomOf="@+id/lPass"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:text="@string/forgot_password"
+        android:textColor="#AD090808"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/lButton"
+        app:layout_constraintEnd_toEndOf="@+id/lPass"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/lPass"
+        app:layout_constraintTop_toBottomOf="@+id/lPass" />
+
+    <Button
+        android:id="@+id/createAcc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="172dp"
+        android:backgroundTint="#87295F"
+        android:text="@string/create_new_account"
+        android:textColor="#F4F2F2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/lButton"
+        app:layout_constraintStart_toStartOf="@+id/lButton" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/or"
+        android:textColor="#5D4037"
+        android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/lButton"
+        app:layout_constraintStart_toStartOf="@+id/lButton"
+        app:layout_constraintTop_toBottomOf="@+id/lButton"
+        app:layout_constraintVertical_bias="0.13" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="145dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="50dp"
+        android:background="?android:attr/listDivider"
+        android:backgroundTint="#0E0D0D"
+        android:foregroundTint="#0C0C0C"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.392"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/lButton" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="145dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="50dp"
+        android:background="?android:attr/listDivider"
+        android:backgroundTint="#0E0D0D"
+        android:foregroundTint="#0C0C0C"
+        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintHorizontal_bias="0.615"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
