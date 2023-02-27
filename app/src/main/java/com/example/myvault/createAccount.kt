@@ -15,13 +15,13 @@ import com.google.firebase.ktx.Firebase
 
 class createAccount : AppCompatActivity() {
 
-    private lateinit var inputEmail: EditText;
-    private lateinit var inputPass: EditText;
-    private lateinit var inputConPass: EditText;
-    private lateinit var inputUsername: EditText;
-    private lateinit var btnReg: Button;
+    private lateinit var inputEmail: EditText
+    private lateinit var inputPass: EditText
+    private lateinit var inputConPass: EditText
+    private lateinit var inputUsername: EditText
+    private lateinit var btnReg: Button
 
-    private lateinit var auth: FirebaseAuth;
+    private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,7 +104,7 @@ class createAccount : AppCompatActivity() {
     private fun updateUI() {
         Firebase.auth.signOut()
         val intent = Intent(this, verification::class.java)
-        startActivity(intent);
+        startActivity(intent)
         finish()
 
     }
