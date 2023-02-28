@@ -19,4 +19,10 @@
     <string name="usrConPass">Confirm Password</string>
     <string name="please_verify_your_email_and_login">Please verify your email and login</string>
     <string name="enter_preffered_username">Enter username</string>
+    <string name="sign_out">Sign out</string>
+    <string name="pdf">Pdf</string>
+    <string name="image">image</string>
+    <string name="profile">profile</string>
+    <string name="name">name</string>
+    <string name="email">email</string>
 </resources>

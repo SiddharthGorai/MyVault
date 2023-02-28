@@ -3,26 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/dname"
+        android:id="@+id/Pdf"
         android:checkable="false"
-        android:icon="@drawable/baseline_account_circle_24"
+        android:icon="@drawable/baseline_picture_as_pdf_24"
         android:visible="true"
-        android:title="@string/name"
-        app:showAsAction="never" />
+        android:title="@string/pdf"
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/demail"
+        android:id="@+id/Img"
         android:checkable="false"
-        android:icon="@drawable/baseline_account_circle_24"
+        android:icon="@drawable/baseline_image_24"
         android:visible="true"
-        android:title="@string/email"
-        app:showAsAction="never" />
+        android:title="@string/image"
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/signOut"
+        android:id="@+id/Profile"
         android:checkable="false"
         android:icon="@drawable/baseline_account_circle_24"
-        android:title="@string/sign_out"
+        android:title="@string/profile"
         android:visible="true"
-        app:showAsAction="never" />
-
-
+        app:showAsAction="always" />
 </menu>

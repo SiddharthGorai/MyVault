@@ -15,12 +15,6 @@ import com.google.firebase.ktx.Firebase
 
 class createAccount : AppCompatActivity() {
 
-    private lateinit var inputEmail: EditText
-    private lateinit var inputPass: EditText
-    private lateinit var inputConPass: EditText
-    private lateinit var inputUsername: EditText
-    private lateinit var btnReg: Button
-
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
@@ -61,8 +55,8 @@ class createAccount : AppCompatActivity() {
             inputPass.requestFocus()
         }
         if (strUsrname.isEmpty()){
-            inputPass.error = "Please enter username."
-            inputPass.requestFocus()
+            inputUsername.error = "Please enter username."
+            inputUsername.requestFocus()
         }
         else if (strConPass != strPass){
             inputConPass.error = "Password not matching."
@@ -79,7 +73,7 @@ class createAccount : AppCompatActivity() {
                        auth.currentUser?.sendEmailVerification()
                            ?.addOnSuccessListener {
                                Toast.makeText(this, "verification sent", Toast.LENGTH_SHORT).show()
-                               saveData(strEmail,strUsrname)
+                               saveData(strUsrname,strEmail)
                                updateUI()
                            }
 
@@ -93,9 +87,9 @@ class createAccount : AppCompatActivity() {
 
             }
 
-    private fun saveData(strEmail: String,strUsrname:String) {
+    private fun saveData(strUsrname: String,strEmail:String) {
 
-        val user = userData(strEmail,strUsrname)
+        val user = userData(strUsrname,strEmail)
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
         database.child("User").child(userID).setValue(user)
 
