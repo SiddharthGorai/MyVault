@@ -87,11 +87,9 @@ class createAccount : AppCompatActivity() {
     }
 
 
-
-
     private fun saveData(strUsrname: String,strEmail:String) {
 
-        val user = userData(strUsrname,strEmail)
+        val user = userData(strUsrname,strEmail,null,null)
         val userID = FirebaseAuth.getInstance().currentUser!!.uid
         database.child("User").child(userID).setValue(user)
 

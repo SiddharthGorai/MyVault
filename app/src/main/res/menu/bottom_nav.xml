@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/Pdf"
+        android:id="@+id/NavPdf"
         android:checkable="false"
         android:icon="@drawable/baseline_picture_as_pdf_24"
         android:visible="true"
         android:title="@string/pdf"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/Img"
+        android:id="@+id/NavImg"
         android:checkable="false"
         android:icon="@drawable/baseline_image_24"
         android:visible="true"
         android:title="@string/image"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/Profile"
+        android:id="@+id/NavProfile"
         android:checkable="false"
         android:icon="@drawable/baseline_account_circle_24"
         android:title="@string/profile"

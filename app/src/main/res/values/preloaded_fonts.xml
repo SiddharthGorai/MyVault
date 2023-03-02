@@ -2,5 +2,6 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/amarante</item>
+        <item>@font/amaranth_bold</item>
     </array>
 </resources>
