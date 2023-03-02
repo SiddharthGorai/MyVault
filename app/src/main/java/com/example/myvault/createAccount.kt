@@ -29,8 +29,8 @@ class createAccount : AppCompatActivity() {
         val btnReg: Button = findViewById(R.id.regButton)
 
         btnReg.setOnClickListener {
-         startAuthentication(inputEmail, inputPass,inputConPass,inputUsername)
-          }
+            startAuthentication(inputEmail, inputPass, inputConPass, inputUsername)
+        }
     }
 
     private fun startAuthentication(
@@ -40,29 +40,26 @@ class createAccount : AppCompatActivity() {
         inputUsername: EditText
     ) {
         val strEmail: String = inputEmail.text.toString().trim()
-        val strPass: String= inputPass.text.toString().trim()
+        val strPass: String = inputPass.text.toString().trim()
         val strConPass: String = inputConPass.text.toString().trim()
         val strUsrname: String = inputUsername.text.toString().trim()
 
 
-        if (strEmail.isEmpty())
-        {
+        if (strEmail.isEmpty()) {
             inputEmail.error = "Please enter correct email."
             inputEmail.requestFocus()
         }
-        if (strPass.isEmpty() || strPass.length < 6){
+        if (strPass.isEmpty() || strPass.length < 6) {
             inputPass.error = "Please enter password greater than 6 characters."
             inputPass.requestFocus()
         }
-        if (strUsrname.isEmpty()){
+        if (strUsrname.isEmpty()) {
             inputUsername.error = "Please enter username."
             inputUsername.requestFocus()
-        }
-        else if (strConPass != strPass){
+        } else if (strConPass != strPass) {
             inputConPass.error = "Password not matching."
             inputConPass.requestFocus()
-        }
-        else{
+        } else {
             auth = Firebase.auth
             database = Firebase.database.reference
 
@@ -70,22 +67,27 @@ class createAccount : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                       auth.currentUser?.sendEmailVerification()
-                           ?.addOnSuccessListener {
-                               Toast.makeText(this, "verification sent", Toast.LENGTH_SHORT).show()
-                               saveData(strUsrname,strEmail)
-                               updateUI()
-                           }
+                        auth.currentUser?.sendEmailVerification()
+                            ?.addOnSuccessListener {
+                                Toast.makeText(this, "verification sent", Toast.LENGTH_SHORT).show()
+                                saveData(strUsrname, strEmail)
+                                updateUI()
+                            }
 
                     } else {
                         // If sign in fails, display a message to the user.
-                        Toast.makeText(baseContext, "Authentication failed.",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            baseContext, "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-            }
+        }
 
-            }
+    }
+
+
+
 
     private fun saveData(strUsrname: String,strEmail:String) {
 
