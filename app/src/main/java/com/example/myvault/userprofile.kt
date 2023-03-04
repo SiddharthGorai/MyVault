@@ -103,42 +103,6 @@ class userprofile : AppCompatActivity() {
 
 
 
-//
-//            val storage = FirebaseStorage.getInstance()
-//            val pdfstorageRef: StorageReference = storage.reference.child("PDFs/$userID")
-//            val PDFlist: ArrayList<userData> = ArrayList()
-//            val listALLTask: Task<ListResult> = pdfstorageRef.listAll()
-//
-//            val textView: TextView = findViewById(R.id.textView7)
-//
-//            listALLTask.addOnCompleteListener { result ->
-//                val items: List<StorageReference> = result.result!!.items
-//                if (!items.isEmpty()) {
-//                    items.forEachIndexed { index, item ->
-//                        PDFlist.add(
-//                            userData(
-//                                null,
-//                                null,
-//                                item.name,
-//                                null
-//                            )
-//                        )
-//
-//                    }
-//                    RecyclerView.adapter = MyPDFAdapter(PDFlist)
-//                } else {
-//                    textView.text = "No Pdf Found"
-//                    textView.visibility = View.VISIBLE
-//                }
-//
-//
-//            }
-//
-//
-//
-//            RecyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-//            RecyclerView.layoutManager = LinearLayoutManager(this)
-
             val add = findViewById<FloatingActionButton>(R.id.add)
             val addPdf = findViewById<FloatingActionButton>(R.id.addPDF)
             val addImg = findViewById<FloatingActionButton>(R.id.addImg)
