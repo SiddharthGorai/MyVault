@@ -12,13 +12,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/pdfNameR"
+            android:id="@+id/imgNameR"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="20sp"
             android:text="@string/textview"
-            app:drawableLeftCompat="@drawable/baseline_picture_as_pdf_24"
+            app:drawableLeftCompat="@drawable/baseline_image_24"
             app:drawableTint="#EF0E0E" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
