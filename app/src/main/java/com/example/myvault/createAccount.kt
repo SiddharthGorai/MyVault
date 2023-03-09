@@ -3,8 +3,10 @@ package com.example.myvault
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -39,6 +41,8 @@ class createAccount : AppCompatActivity() {
         inputConPass: EditText,
         inputUsername: EditText
     ) {
+        val mBar = findViewById<ProgressBar>(R.id.mBar)
+
         val strEmail: String = inputEmail.text.toString().trim()
         val strPass: String = inputPass.text.toString().trim()
         val strConPass: String = inputConPass.text.toString().trim()
@@ -60,6 +64,7 @@ class createAccount : AppCompatActivity() {
             inputConPass.error = "Password not matching."
             inputConPass.requestFocus()
         } else {
+            mBar.visibility = View.VISIBLE
             auth = Firebase.auth
             database = Firebase.database.reference
 
@@ -71,7 +76,7 @@ class createAccount : AppCompatActivity() {
                             ?.addOnSuccessListener {
                                 Toast.makeText(this, "verification sent", Toast.LENGTH_SHORT).show()
                                 saveData(strUsrname, strEmail)
-                                updateUI()
+                                updateUI(mBar)
                             }
 
                     } else {
@@ -80,6 +85,7 @@ class createAccount : AppCompatActivity() {
                             baseContext, "Authentication failed.",
                             Toast.LENGTH_SHORT
                         ).show()
+                        mBar.visibility = View.INVISIBLE
                     }
                 }
         }
@@ -95,10 +101,11 @@ class createAccount : AppCompatActivity() {
 
     }
 
-    private fun updateUI() {
+    private fun updateUI(bar: ProgressBar) {
         Firebase.auth.signOut()
         val intent = Intent(this, verification::class.java)
         startActivity(intent)
+        bar.visibility = View.INVISIBLE
         finish()
 
     }

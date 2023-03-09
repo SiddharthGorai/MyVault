@@ -5,6 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".imgFrag">
 
+   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRefImg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/imgRec"
         android:layout_width="match_parent"
@@ -14,8 +19,10 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
+   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <TextView
-        android:id="@+id/msgTxt"
+        android:id="@+id/msgTxtI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -23,6 +30,15 @@
         android:gravity="center"
         android:text="@string/textview"
         android:textSize="25sp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progBar"
+        android:indeterminateDrawable="@drawable/progress_bg"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="89dp"
+        android:layout_gravity="center"
+        android:layout_height="78dp"
         android:visibility="gone" />
 
 

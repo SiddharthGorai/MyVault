@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".pdfFrag">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/swipeRef"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pdfRec"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/pdflist"
-        >
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/pdflist">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
         android:id="@+id/msgTxt"
@@ -23,6 +29,15 @@
         android:gravity="center"
         android:text="@string/textview"
         android:textSize="25sp"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="89dp"
+        android:layout_height="78dp"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/progress_bg"
         android:visibility="gone" />
 
 

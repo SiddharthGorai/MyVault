@@ -1,8 +1,10 @@
 package com.example.myvault
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,7 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
+import com.example.myvault.Adapter.MyTabAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -19,7 +22,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.Tab
 
 class userprofile : AppCompatActivity() {
 
@@ -31,6 +35,9 @@ class userprofile : AppCompatActivity() {
     private lateinit var imgUri: Uri
     private val userID = FirebaseAuth.getInstance().currentUser!!.uid
     var menu: Menu? = null
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager: ViewPager
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate((R.menu.navbar), menu)
@@ -83,25 +90,33 @@ class userprofile : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_userprofile)
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_userprofile)
+        getSupportActionBar()?.setElevation(0F)
+        getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getColor(R.color.mycolor)))
 
-        val bTV = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        replaceFragment(pdfFrag())
-        bTV.setOnItemSelectedListener {
-            when (it.itemId){
-//                R.id.NavProfile -> replaceFragment(profFag())
-                R.id.NavPdf -> replaceFragment(pdfFrag())
-                R.id.NavImg -> replaceFragment(imgFrag())
-                else -> {
+        tabLayout = findViewById(R.id.tabLayout)
+        viewPager = findViewById(R.id.viewPager)
 
-                }
+        tabLayout.addTab(tabLayout.newTab().setText("PDF"))
+        tabLayout.addTab(tabLayout.newTab().setText("IMG"))
+        tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+
+        val adapter = MyTabAdapter(this, supportFragmentManager, tabLayout.tabCount)
+        viewPager.adapter = adapter
+
+        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: Tab?) {
+                viewPager.currentItem = tab!!.position
             }
-            true
-        }
 
+            override fun onTabUnselected(tab: Tab?) {
+            }
+            override fun onTabReselected(tab: Tab?) {
+            }
 
-
+        })
 
             val add = findViewById<FloatingActionButton>(R.id.add)
             val addPdf = findViewById<FloatingActionButton>(R.id.addPDF)
@@ -131,17 +146,17 @@ class userprofile : AppCompatActivity() {
 
     }
 
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentmanager = supportFragmentManager
-        val fragmentTransaction = fragmentmanager.beginTransaction()
-        fragmentTransaction.replace(R.id.frameLayout,fragment)
-        fragmentTransaction.commit()
-    }
 
         @Deprecated("Deprecated in Java")
         @SuppressLint("Range")
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)
+
+            val mProgressDialog = ProgressDialog(this)
+            mProgressDialog.setTitle("My Vault")
+            mProgressDialog.setMessage("Uploading..")
+//            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            mProgressDialog.setCancelable(false)
 
             // For loading PDF
             when (requestCode) {
@@ -151,6 +166,7 @@ class userprofile : AppCompatActivity() {
                     val uri: Uri = data?.data!!
                     val uriString: String = uri.toString()
                     var pdfName: String? = null
+
 
                     if (uriString.startsWith("content://")) {
                         var myCursor: Cursor? = null
@@ -167,18 +183,20 @@ class userprofile : AppCompatActivity() {
                                     .setMessage("Do you want to upload $pdfName to myvault ?")
                                     .setCancelable(true)
                                     .setPositiveButton("Yes") { dialogInterface, it ->
-                                        uploadPDF(uri, pdfName)
+                                        mProgressDialog.show()
+                                        uploadPDF(uri, pdfName,mProgressDialog)
 
                                     }
                                     .setNegativeButton("No") { dialogInterface, it ->
                                         dialogInterface.cancel()
                                     }.show()
-
                             }
+
 
 
                         } finally {
                             myCursor?.close()
+
                         }
                     }
 
@@ -222,6 +240,7 @@ class userprofile : AppCompatActivity() {
 
                 }
             }
+
         }
 
 
@@ -238,14 +257,24 @@ class userprofile : AppCompatActivity() {
         startActivityForResult(pdfIntent, 12)
     }
 
-    private fun uploadPDF(fUri: Uri, pName: String) {
+    private fun uploadPDF(fUri: Uri, pName: String, pD: ProgressDialog) {
+
+            pD.setMax(100)
             storageRef.getReference("PDFs").child(userID).child(pName)
                 .putFile(fUri)
                 .addOnSuccessListener {
-                    Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_SHORT).show()
+                    pD.dismiss()
+                }
+                .addOnProgressListener {
+                    val progress: Long = (it.bytesTransferred /it.totalByteCount) * 100
+                    pD.setMessage(progress.toString() + "%")
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+                    pD.dismiss()
+
+
                 }
 
         }
@@ -254,6 +283,7 @@ class userprofile : AppCompatActivity() {
             .putFile(fUri)
             .addOnSuccessListener {
                 Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_LONG).show()
+
             }
             .addOnFailureListener {
                 Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()

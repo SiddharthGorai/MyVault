@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
@@ -29,8 +31,8 @@ class imgFrag : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    private  lateinit var adapter: MyIMGAdapter
-    private  lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: MyIMGAdapter
+    private lateinit var recyclerView: RecyclerView
     private val userID = FirebaseAuth.getInstance().currentUser!!.uid
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,21 +74,39 @@ class imgFrag : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        getAllimg(view)
+        val textView: TextView = view.findViewById(R.id.msgTxtI)
+
+        val swipeRefreshLayoutt = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefImg)
+        swipeRefreshLayoutt.setOnRefreshListener {
+            textView.visibility = View.GONE
+            getAllimg(view)
+            swipeRefreshLayoutt.isRefreshing = false
+        }
+
+
+    }
+
+    private fun getAllimg(view: View) {
+
+        val progBar = view.findViewById<ProgressBar>(R.id.progBar)
+        progBar.visibility = View.VISIBLE
 
         val storage = FirebaseStorage.getInstance()
         val imgstorageRef: StorageReference = storage.reference.child("IMGs/$userID")
         val IMGlist: ArrayList<userData> = ArrayList()
         val listALLTask: Task<ListResult> = imgstorageRef.listAll()
 
-        val textView: TextView = view.findViewById(R.id.msgTxt)
+        val textView: TextView = view.findViewById(R.id.msgTxtI)
 
         listALLTask.addOnCompleteListener { result ->
             val items: List<StorageReference> = result.result!!.items
             if (!items.isEmpty()) {
 
                 items.forEachIndexed { index, item ->
-                    if(item.name.contains(".jpg") || item.name.contains(".png")
-                        || item.name.contains(".jpeg") || item.name.contains(".bmp"))  {
+                    if (item.name.contains(".jpg") || item.name.contains(".png")
+                        || item.name.contains(".jpeg") || item.name.contains(".bmp")
+                    ) {
                         IMGlist.add(
                             userData(
                                 null,
@@ -104,10 +124,13 @@ class imgFrag : Fragment() {
                 recyclerView = view.findViewById(R.id.imgRec)
                 recyclerView.layoutManager = layoutManager
                 adapter = MyIMGAdapter(IMGlist)
-                recyclerView.adapter   = adapter
+                recyclerView.adapter = adapter
+                progBar.visibility = View.INVISIBLE
+
             } else {
                 textView.text = "No Img Found"
                 textView.visibility = View.VISIBLE
+                progBar.visibility = View.INVISIBLE
             }
 
         }
