@@ -285,10 +285,10 @@ class userprofile : AppCompatActivity() {
                     task.metadata!!.reference!!.downloadUrl
                         .addOnSuccessListener {
                             val mapPDF = mapOf(
-                                "url" to it.toString()  + " ; " + pName
+                                "url" to it.toString()
                             )
                             val databaseReference = FirebaseDatabase.getInstance().getReference("PDFs")
-                            databaseReference.child(userID).child(System.currentTimeMillis().toString()).setValue(mapPDF)
+                            databaseReference.child(userID).child(pName.replace(".",",")).setValue(mapPDF)
                         }
                     Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_SHORT).show()
 
@@ -314,10 +314,10 @@ class userprofile : AppCompatActivity() {
                 task.metadata!!.reference!!.downloadUrl
                     .addOnSuccessListener {
                         val mapImg = mapOf(
-                            "url" to it.toString() + " ; " + iName
+                            "url" to it.toString()
                         )
                         val databaseReference = FirebaseDatabase.getInstance().getReference("IMGs")
-                        databaseReference.child(userID).child(System.currentTimeMillis().toString()).setValue(mapImg)
+                        databaseReference.child(userID).child(iName.replace(".",",")).setValue(mapImg)
                     }
                 Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_LONG).show()
                 pDD.dismiss()
