@@ -12,32 +12,15 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#3AC4C8"
+        android:background="@color/pink"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="#706E73"
-        app:tabRippleColor="#4A4242"
-        app:tabSelectedTextColor="#4A4242"
-        app:tabTextColor="#706E73" />
-
-    <!--    <FrameLayout-->
-<!--        android:id="@+id/frameLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--    </FrameLayout>-->
-
-<!--    <FrameLayout-->
-<!--        android:id="@+id/container"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_above="@+id/bottomNavigationView"-->
-<!--        />-->
+        app:tabIndicatorColor="#E6E2EC"
+        app:tabRippleColor="#151313"
+        app:tabSelectedTextColor="#FDFBFB"
+        app:tabTextColor="#BCBCC5" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

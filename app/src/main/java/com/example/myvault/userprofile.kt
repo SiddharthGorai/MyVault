@@ -24,6 +24,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
+import com.google.firebase.database.FirebaseDatabase
+import com.yalantis.ucrop.UCrop
+import java.io.File
+import java.util.*
 
 class userprofile : AppCompatActivity() {
 
@@ -37,6 +41,8 @@ class userprofile : AppCompatActivity() {
     var menu: Menu? = null
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
+    private lateinit var finalUri: Uri
+
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -93,13 +99,13 @@ class userprofile : AppCompatActivity() {
             super.onCreate(savedInstanceState)
             setContentView(R.layout.activity_userprofile)
         getSupportActionBar()?.setElevation(0F)
-        getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getColor(R.color.mycolor)))
+        getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getColor(R.color.pink)))
 
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
 
-        tabLayout.addTab(tabLayout.newTab().setText("PDF"))
-        tabLayout.addTab(tabLayout.newTab().setText("IMG"))
+        tabLayout.addTab(tabLayout.newTab().setText("MY PDF"))
+        tabLayout.addTab(tabLayout.newTab().setText("MY IMG"))
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 
         val adapter = MyTabAdapter(this, supportFragmentManager, tabLayout.tabCount)
@@ -205,7 +211,6 @@ class userprofile : AppCompatActivity() {
 
                 13 -> if (resultCode == RESULT_OK) {
 
-                    imgUri = data?.data!!
                     val uri: Uri = data?.data!!
                     val uriString: String = uri.toString()
                     var imgName: String? = null
@@ -225,7 +230,8 @@ class userprofile : AppCompatActivity() {
                                     .setMessage("Do you want to upload $imgName to myvault ?")
                                     .setCancelable(true)
                                     .setPositiveButton("Yes") { dialogInterface, it ->
-                                        uploadImg(uri, imgName)
+                                        mProgressDialog.show()
+                                        uploadImg(uri, imgName,mProgressDialog)
 
                                     }
                                     .setNegativeButton("No") { dialogInterface, it ->
@@ -242,6 +248,19 @@ class userprofile : AppCompatActivity() {
             }
 
         }
+
+//    private fun launchImageCrop(imgUri: Uri) {
+//        val destination: String = StringBuilder(UUID.randomUUID().toString()).toString()
+//        val options: UCrop.Options = UCrop.Options()
+//
+//        UCrop.of(Uri.parse(imgUri.toString()), Uri.fromFile(File(cacheDir, destination)))
+//            .withOptions(options)
+//            .withAspectRatio(0F, 0F)
+//            .useSourceImageAspectRatio()
+//            .withMaxResultSize(2000, 2000)
+//            .start(this)
+//
+//    }
 
 
     private fun selectImg() {
@@ -262,13 +281,23 @@ class userprofile : AppCompatActivity() {
             pD.setMax(100)
             storageRef.getReference("PDFs").child(userID).child(pName)
                 .putFile(fUri)
-                .addOnSuccessListener {
+                .addOnSuccessListener {task ->
+                    task.metadata!!.reference!!.downloadUrl
+                        .addOnSuccessListener {
+                            val mapPDF = mapOf(
+                                "url" to it.toString()  + " ; " + pName
+                            )
+                            val databaseReference = FirebaseDatabase.getInstance().getReference("PDFs")
+                            databaseReference.child(userID).child(System.currentTimeMillis().toString()).setValue(mapPDF)
+                        }
                     Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_SHORT).show()
+
                     pD.dismiss()
                 }
                 .addOnProgressListener {
                     val progress: Long = (it.bytesTransferred /it.totalByteCount) * 100
-                    pD.setMessage(progress.toString() + "%")
+                    pD.setMessage("Uploading..")
+//                    pD.setMessage(progress.toString() + "%")
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
@@ -278,15 +307,30 @@ class userprofile : AppCompatActivity() {
                 }
 
         }
-    private fun uploadImg(fUri: Uri, iName: String) {
+    private fun uploadImg(fUri: Uri, iName: String,pDD: ProgressDialog) {
         storageRef.getReference("IMGs").child(userID).child(iName)
             .putFile(fUri)
-            .addOnSuccessListener {
+            .addOnSuccessListener {task ->
+                task.metadata!!.reference!!.downloadUrl
+                    .addOnSuccessListener {
+                        val mapImg = mapOf(
+                            "url" to it.toString() + " ; " + iName
+                        )
+                        val databaseReference = FirebaseDatabase.getInstance().getReference("IMGs")
+                        databaseReference.child(userID).child(System.currentTimeMillis().toString()).setValue(mapImg)
+                    }
                 Toast.makeText(this, "Successfully Uploaded", Toast.LENGTH_LONG).show()
+                pDD.dismiss()
 
+            }
+            .addOnProgressListener {
+                val progress: Long = (it.bytesTransferred /it.totalByteCount) * 100
+                pDD.setMessage("Uploading..")
+//                pDD.setMessage(progress.toString() + "%")
             }
             .addOnFailureListener {
                 Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
+                pDD.dismiss()
             }
 
     }

@@ -89,7 +89,7 @@ class imgFrag : Fragment() {
 
     private fun getAllimg(view: View) {
 
-        val progBar = view.findViewById<ProgressBar>(R.id.progBar)
+        val progBar = view.findViewById<ProgressBar>(R.id.progBarImg)
         progBar.visibility = View.VISIBLE
 
         val storage = FirebaseStorage.getInstance()

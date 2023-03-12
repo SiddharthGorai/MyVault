@@ -73,7 +73,7 @@ class pdfFrag : Fragment() {
         getAllPdf(view)
         val textView: TextView = view.findViewById(R.id.msgTxt)
 
-        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRef)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRef)
         swipeRefreshLayout.setOnRefreshListener {
             textView.visibility = View.GONE
             getAllPdf(view)

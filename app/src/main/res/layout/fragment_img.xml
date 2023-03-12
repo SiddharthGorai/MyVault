@@ -33,7 +33,7 @@
         android:visibility="gone" />
 
     <ProgressBar
-        android:id="@+id/progBar"
+        android:id="@+id/progBarImg"
         android:indeterminateDrawable="@drawable/progress_bg"
         style="?android:attr/progressBarStyle"
         android:layout_width="89dp"
