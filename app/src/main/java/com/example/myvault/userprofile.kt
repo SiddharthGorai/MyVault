@@ -41,7 +41,6 @@ class userprofile : AppCompatActivity() {
     var menu: Menu? = null
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
-    private lateinit var finalUri: Uri
 
 
 

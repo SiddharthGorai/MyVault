@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ListResult
 import com.google.firebase.storage.StorageReference
@@ -34,6 +35,8 @@ class imgFrag : Fragment() {
     private lateinit var adapter: MyIMGAdapter
     private lateinit var recyclerView: RecyclerView
     private val userID = FirebaseAuth.getInstance().currentUser!!.uid
+    private lateinit var databaseRefImg: DatabaseReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,47 +96,88 @@ class imgFrag : Fragment() {
         progBar.visibility = View.VISIBLE
 
         val storage = FirebaseStorage.getInstance()
-        val imgstorageRef: StorageReference = storage.reference.child("IMGs/$userID")
+//        val imgstorageRef: StorageReference = storage.reference.child("IMGs/$userID")
         val IMGlist: ArrayList<userData> = ArrayList()
-        val listALLTask: Task<ListResult> = imgstorageRef.listAll()
+//        val listALLTask: Task<ListResult> = imgstorageRef.listAll()
 
         val textView: TextView = view.findViewById(R.id.msgTxtI)
 
-        listALLTask.addOnCompleteListener { result ->
-            val items: List<StorageReference> = result.result!!.items
-            if (!items.isEmpty()) {
-
-                items.forEachIndexed { index, item ->
-                    if (item.name.contains(".jpg") || item.name.contains(".png")
-                        || item.name.contains(".jpeg") || item.name.contains(".bmp")
-                    ) {
-                        IMGlist.add(
-                            userData(
-                                null,
-                                null,
-                                null,
-                                item.name
+        databaseRefImg = FirebaseDatabase.getInstance().getReference("IMGs").child(userID)
+        databaseRefImg.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if(snapshot.exists()){
+                    for(userSnapshot in snapshot.children){
+                        var imgName: String = userSnapshot.key.toString()
+//                        imgName = imgName.replace(",",".")
+                        if(!IMGlist.contains(userData(null, null, null, imgName))){
+                            IMGlist.add(
+                                userData(
+                                    null,
+                                    null,
+                                    null,
+                                    imgName
+                                )
                             )
-                        )
+                        }
+                        val layoutManager = LinearLayoutManager(context)
+                        recyclerView = view.findViewById(R.id.imgRec)
+                        recyclerView.layoutManager = layoutManager
+                        adapter = MyIMGAdapter(IMGlist)
+                        recyclerView.adapter = adapter
+                        progBar.visibility = View.INVISIBLE
+                        textView.visibility = View.INVISIBLE
 
                     }
-
                 }
-
-                val layoutManager = LinearLayoutManager(context)
-                recyclerView = view.findViewById(R.id.imgRec)
-                recyclerView.layoutManager = layoutManager
-                adapter = MyIMGAdapter(IMGlist)
-                recyclerView.adapter = adapter
-                progBar.visibility = View.INVISIBLE
-
-            } else {
-                textView.text = "No Img Found"
-                textView.visibility = View.VISIBLE
-                progBar.visibility = View.INVISIBLE
+                else{
+                    textView.text = "No Image Found"
+                    textView.visibility = View.VISIBLE
+                    progBar.visibility = View.INVISIBLE
+                }
             }
 
-        }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
+//        listALLTask.addOnCompleteListener { result ->
+//            val items: List<StorageReference> = result.result!!.items
+//            if (!items.isEmpty()) {
+//
+//                items.forEachIndexed { index, item ->
+//                    if (item.name.contains(".jpg") || item.name.contains(".png")
+//                        || item.name.contains(".jpeg") || item.name.contains(".bmp")
+//                    ) {
+//                        IMGlist.add(
+//                            userData(
+//                                null,
+//                                null,
+//                                null,
+//                                item.name
+//                            )
+//                        )
+//
+//                    }
+//
+//                }
+//
+//                val layoutManager = LinearLayoutManager(context)
+//                recyclerView = view.findViewById(R.id.imgRec)
+//                recyclerView.layoutManager = layoutManager
+//                adapter = MyIMGAdapter(IMGlist)
+//                recyclerView.adapter = adapter
+//                progBar.visibility = View.INVISIBLE
+//
+//            } else {
+//                textView.text = "No Img Found"
+//                textView.visibility = View.VISIBLE
+//                progBar.visibility = View.INVISIBLE
+//            }
+//
+//        }
 
     }
 }

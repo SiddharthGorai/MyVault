@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ListResult
 import com.google.firebase.storage.StorageReference
@@ -31,6 +34,8 @@ class pdfFrag : Fragment() {
     private  lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private val userID = FirebaseAuth.getInstance().currentUser!!.uid
+    private lateinit var databaseRef: DatabaseReference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,44 +91,87 @@ class pdfFrag : Fragment() {
 
         val progBar = view.findViewById<ProgressBar>(R.id.progBar)
         progBar.visibility = View.VISIBLE
-        val storage = FirebaseStorage.getInstance()
-        val pdfstorageRef: StorageReference = storage.reference.child("PDFs/$userID")
+//        val storage = FirebaseStorage.getInstance()
+//        val pdfstorageRef: StorageReference = storage.reference.child("PDFs/$userID")
         val PDFlist: ArrayList<userData> = ArrayList()
-        val listALLTask: Task<ListResult> = pdfstorageRef.listAll()
+//        val listALLTask: Task<ListResult> = pdfstorageRef.listAll()
 
         val textView: TextView = view.findViewById(R.id.msgTxt)
 
-        listALLTask.addOnCompleteListener { result ->
-            val items: List<StorageReference> = result.result!!.items
-            if (!items.isEmpty()) {
-
-                items.forEachIndexed { index, item ->
-                    if(item.name.contains(".pdf")){
-                        PDFlist.add(
+        databaseRef = FirebaseDatabase.getInstance().getReference("PDFs").child(userID)
+        databaseRef.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+               if(snapshot.exists()){
+                   for(userSnapshot in snapshot.children){
+                       var pdfName: String = userSnapshot.key.toString()
+                       pdfName = pdfName.replace(",pdf","")
+                       if(!PDFlist.contains(userData(null, null, pdfName, null))){
+                       PDFlist.add(
                             userData(
                                 null,
                                 null,
-                                item.name,
+                                pdfName,
                                 null
                             )
-                        )
+                       )
+                   }
+                       val layoutManager = LinearLayoutManager(context)
+                       recyclerView = view.findViewById(R.id.pdfRec)
+                       recyclerView.layoutManager = layoutManager
+                       adapter = MyPDFAdapter(PDFlist)
+                       recyclerView.adapter   = adapter
+                       progBar.visibility = View.INVISIBLE
+                       textView.visibility = View.INVISIBLE
 
-                    }
-                }
-                val layoutManager = LinearLayoutManager(context)
-                recyclerView = view.findViewById(R.id.pdfRec)
-                recyclerView.layoutManager = layoutManager
-                adapter = MyPDFAdapter(PDFlist)
-                recyclerView.adapter   = adapter
-                progBar.visibility = View.INVISIBLE
-
-            } else {
-                textView.text = "No Pdf Found"
-                textView.visibility = View.VISIBLE
-                progBar.visibility = View.INVISIBLE
+                   }
+               }
+                else{
+                   textView.text = "No Pdf Found"
+                   textView.visibility = View.VISIBLE
+                   progBar.visibility = View.INVISIBLE
+               }
             }
 
-        }
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
+
+
+//        listALLTask.addOnCompleteListener { result ->
+//            val items: List<StorageReference> = result.result!!.items
+//            if (!items.isEmpty()) {
+//
+//                items.forEachIndexed { index, item ->
+//                    if(item.name.contains(".pdf")){
+//                        PDFlist.add(
+//                            userData(
+//                                null,
+//                                null,
+//                                item.name,
+//                                null
+//                            )
+//                        )
+//
+//                    }
+//                }
+////                val layoutManager = LinearLayoutManager(context)
+////                recyclerView = view.findViewById(R.id.pdfRec)
+////                recyclerView.layoutManager = layoutManager
+////                adapter = MyPDFAdapter(PDFlist)
+////                recyclerView.adapter   = adapter
+////                progBar.visibility = View.INVISIBLE
+////
+////            } else {
+////                textView.text = "No Pdf Found"
+////                textView.visibility = View.VISIBLE
+////                progBar.visibility = View.INVISIBLE
+////            }
+//
+//        }
     }
 
 

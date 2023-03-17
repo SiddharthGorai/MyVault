@@ -40,20 +40,13 @@ class loginActivity : AppCompatActivity() {
 
 
 
-        // create account
-//        val regButton: TextView = findViewById(R.id.signUp)
-//        regButton.setOnClickListener {
-//            val intent = Intent(this, createAccount::class.java)
-//            startActivity(intent)
-//
-//        }
-
         val signUpTxt: TextView = findViewById(R.id.signUp)
         val logInTxt: TextView =  findViewById(R.id.logIN)
         val signInbtn: Button = findViewById(R.id.regButton)
         val logInbtn: Button = findViewById(R.id.lButton)
         val signInLayout : LinearLayout = findViewById(R.id.signInLayout)
         val logInLayout: LinearLayout = findViewById(R.id.logInLayout)
+        val forPass: TextView = findViewById(R.id.forgetPass)
 
         signUpTxt.setOnClickListener {
             signUpTxt.background = resources.getDrawable(R.drawable.switch_trcks,null)
@@ -91,6 +84,10 @@ class loginActivity : AppCompatActivity() {
         signInbtn.setOnClickListener{
             signin()
         }
+        forPass.setOnClickListener {
+            forgetPassword()
+        }
+
     }
 
     private fun login(logEmail: EditText, logPass: EditText) {
@@ -226,6 +223,11 @@ class loginActivity : AppCompatActivity() {
         inputConPass.setText("")
         inputUsername.setText("")
 
+    }
+
+    private fun forgetPassword() {
+        val intent = Intent(this,forgetPassword::class.java)
+        startActivity(intent)
     }
 
 }
