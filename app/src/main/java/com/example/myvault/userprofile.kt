@@ -25,8 +25,7 @@ import com.google.firebase.storage.ktx.storage
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.Tab
 import com.google.firebase.database.FirebaseDatabase
-import com.yalantis.ucrop.UCrop
-import java.io.File
+
 import java.util.*
 
 class userprofile : AppCompatActivity() {
@@ -35,8 +34,6 @@ class userprofile : AppCompatActivity() {
     private lateinit var uploadAlert: AlertDialog.Builder
     private lateinit var database: DatabaseReference
     private var storageRef = Firebase.storage
-    private lateinit var pdfUri: Uri
-    private lateinit var imgUri: Uri
     private val userID = FirebaseAuth.getInstance().currentUser!!.uid
     var menu: Menu? = null
     private lateinit var tabLayout: TabLayout
@@ -167,7 +164,6 @@ class userprofile : AppCompatActivity() {
             when (requestCode) {
                 12 -> if (resultCode == RESULT_OK) {
 
-                    pdfUri = data?.data!!
                     val uri: Uri = data?.data!!
                     val uriString: String = uri.toString()
                     var pdfName: String? = null
@@ -248,18 +244,7 @@ class userprofile : AppCompatActivity() {
 
         }
 
-//    private fun launchImageCrop(imgUri: Uri) {
-//        val destination: String = StringBuilder(UUID.randomUUID().toString()).toString()
-//        val options: UCrop.Options = UCrop.Options()
-//
-//        UCrop.of(Uri.parse(imgUri.toString()), Uri.fromFile(File(cacheDir, destination)))
-//            .withOptions(options)
-//            .withAspectRatio(0F, 0F)
-//            .useSourceImageAspectRatio()
-//            .withMaxResultSize(2000, 2000)
-//            .start(this)
-//
-//    }
+
 
 
     private fun selectImg() {
