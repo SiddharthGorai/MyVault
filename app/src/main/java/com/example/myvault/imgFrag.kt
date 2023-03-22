@@ -1,5 +1,6 @@
 package com.example.myvault
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,15 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ListResult
-import com.google.firebase.storage.StorageReference
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -77,71 +76,148 @@ class imgFrag : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getAllimg(view)
+        init(view)
+//      getAllimg(view)
         val textView: TextView = view.findViewById(R.id.msgTxtI)
 
         val swipeRefreshLayoutt = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefImg)
         swipeRefreshLayoutt.setOnRefreshListener {
             textView.visibility = View.GONE
-            getAllimg(view)
+//            getAllimg(view)
+            init(view)
             swipeRefreshLayoutt.isRefreshing = false
         }
 
 
     }
 
-    private fun getAllimg(view: View) {
-
+    private fun init(view: View) {
         val progBar = view.findViewById<ProgressBar>(R.id.progBarImg)
+        val textView: TextView = view.findViewById(R.id.msgTxtI)
         progBar.visibility = View.VISIBLE
 
-        val storage = FirebaseStorage.getInstance()
-//        val imgstorageRef: StorageReference = storage.reference.child("IMGs/$userID")
         val IMGlist: ArrayList<userData> = ArrayList()
-//        val listALLTask: Task<ListResult> = imgstorageRef.listAll()
-
-        val textView: TextView = view.findViewById(R.id.msgTxtI)
+        recyclerView = view.findViewById(R.id.imgRec)
+        recyclerView.layoutManager = GridLayoutManager(context,3)
+//        recyclerView.layoutManager = LinearLayoutManager(context)
 
         databaseRefImg = FirebaseDatabase.getInstance().getReference("IMGs").child(userID)
         databaseRefImg.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if(snapshot.exists()){
                     for(userSnapshot in snapshot.children){
-                        var imgName: String = userSnapshot.key.toString()
-//                        imgName = imgName.replace(",",".")
-                        if(!IMGlist.contains(userData(null, null, null, imgName))){
+
+                        var imgNamee: String = userSnapshot.key.toString()
+                        imgNamee = imgNamee.replace(",",".")
+
+
+                        var imgUrll = userSnapshot.getValue().toString()
+                        imgUrll = imgUrll.replace("{url=","")
+                        imgUrll = imgUrll.replace("}","")
+                        if(!IMGlist.contains(userData(null, null, null, imgNamee,imgUrll))) {
                             IMGlist.add(
                                 userData(
                                     null,
                                     null,
                                     null,
-                                    imgName
+                                    imgNamee,
+                                    imgUrll
                                 )
                             )
                         }
-                        val layoutManager = LinearLayoutManager(context)
-                        recyclerView = view.findViewById(R.id.imgRec)
-                        recyclerView.layoutManager = layoutManager
-                        adapter = MyIMGAdapter(IMGlist)
-                        recyclerView.adapter = adapter
-                        progBar.visibility = View.INVISIBLE
-                        textView.visibility = View.INVISIBLE
-
                     }
+                    adapter = MyIMGAdapter(IMGlist,this@imgFrag)
+                    recyclerView.adapter = adapter
+                    progBar.visibility = View.INVISIBLE
+                    textView.visibility = View.INVISIBLE
+
+                    adapter.setOnItemClickListener(object : MyIMGAdapter.onItemClickListener{
+                        override fun onItemClick(position: Int) {
+
+                            val imgU: String = (recyclerView.findViewHolderForAdapterPosition(position)
+                                ?.itemView?.findViewById<TextView>(R.id.imgUrlR))?.text.toString()
+                            val imgName: String = (recyclerView.findViewHolderForAdapterPosition(position)
+                                ?.itemView?.findViewById<TextView>(R.id.imgNameR))?.text.toString()
+
+                            val bundle = Bundle()
+                            bundle.putString("imgUrl", imgU)
+                            bundle.putString("imgName",imgName)
+                            val intent = Intent (activity, viewIMG::class.java)
+                            intent.putExtras(bundle)
+                            startActivity(intent)
+
+                        }
+                    })
                 }
                 else{
-                    textView.text = "No Image Found"
-                    textView.visibility = View.VISIBLE
-                    progBar.visibility = View.INVISIBLE
-                }
-            }
+                textView.text = "No Image Found"
+                textView.visibility = View.VISIBLE
+                progBar.visibility = View.INVISIBLE
+            }}
 
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
+        }
+        )
 
+    }
 
-        })
+//    private fun getAllimg(view: View) {
+//
+//
+//
+//        val progBar = view.findViewById<ProgressBar>(R.id.progBarImg)
+//        progBar.visibility = View.VISIBLE
+//
+//        val storage = FirebaseStorage.getInstance()
+////        val imgstorageRef: StorageReference = storage.reference.child("IMGs/$userID")
+//        val IMGlist: ArrayList<userData> = ArrayList()
+////        val listALLTask: Task<ListResult> = imgstorageRef.listAll()
+//
+//        val textView: TextView = view.findViewById(R.id.msgTxtI)
+//
+//        databaseRefImg = FirebaseDatabase.getInstance().getReference("IMGs").child(userID)
+//        databaseRefImg.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                if(snapshot.exists()){
+//                    for(userSnapshot in snapshot.children){
+//                        var imgName: String = userSnapshot.key.toString()
+////                        imgName = imgName.replace(",",".")
+//                        if(!IMGlist.contains(userData(null, null, null, imgName,null))){
+//                            IMGlist.add(
+//                                userData(
+//                                    null,
+//                                    null,
+//                                    null,
+//                                    imgName,
+//                                    null
+//                                )
+//                            )
+//                        }
+//                        val layoutManager = LinearLayoutManager(context)
+//                        recyclerView = view.findViewById(R.id.imgRec)
+//                        recyclerView.layoutManager = layoutManager
+//                        adapter = MyIMGAdapter(IMGlist,this@imgFrag)
+//                        recyclerView.adapter = adapter
+//                        progBar.visibility = View.INVISIBLE
+//                        textView.visibility = View.INVISIBLE
+//
+//                    }
+//                }
+//                else{
+//                    textView.text = "No Image Found"
+//                    textView.visibility = View.VISIBLE
+//                    progBar.visibility = View.INVISIBLE
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                TODO("Not yet implemented")
+//            }
+//
+//
+//        })
 
 //        listALLTask.addOnCompleteListener { result ->
 //            val items: List<StorageReference> = result.result!!.items
@@ -179,5 +255,5 @@ class imgFrag : Fragment() {
 //
 //        }
 
-    }
+//    }
 }

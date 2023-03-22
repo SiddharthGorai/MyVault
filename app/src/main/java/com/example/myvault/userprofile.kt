@@ -13,6 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.viewpager.widget.ViewPager
 import com.example.myvault.Adapter.MyTabAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -96,6 +97,7 @@ class userprofile : AppCompatActivity() {
             setContentView(R.layout.activity_userprofile)
         getSupportActionBar()?.setElevation(0F)
         getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getColor(R.color.pink)))
+
 
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)

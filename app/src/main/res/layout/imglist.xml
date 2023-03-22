@@ -4,21 +4,41 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="10dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:elevation="20dp">
 
+        <ImageView
+            android:id="@+id/imageS"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/baseline_image_24"/>
         <TextView
             android:id="@+id/imgNameR"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/textview"
-            app:drawableLeftCompat="@drawable/baseline_image_24"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:drawableTint="#EF0E0E" />
+        <TextView
+            android:id="@+id/imgUrlR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="@string/textview"
+            android:textColor="@color/black"
             app:drawableTint="#EF0E0E" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

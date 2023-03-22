@@ -1,10 +1,16 @@
 package com.example.myvault
 
 import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
+import android.widget.Button
+import android.widget.Toast
+import androidx.core.net.toUri
 import com.github.barteksc.pdfviewer.PDFView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.io.BufferedInputStream
@@ -26,6 +32,8 @@ class viewPDF : AppCompatActivity() {
 
         val pdfView: PDFView = findViewById(R.id.pdfView)
         val bundleG = intent.extras
+        val downBtn : FloatingActionButton = findViewById(R.id.downPDfBtn)
+
 
         if (bundleG != null){
             val pdfName = bundleG.getString("pdfName")
@@ -41,6 +49,9 @@ class viewPDF : AppCompatActivity() {
                                 urll = urll.replace("{url=","")
                                 urll = urll.replace("}","")
                                 RetrievePDFFromURL(pdfView).execute(urll)
+                                downBtn.setOnClickListener {
+                                    downloadPDF(pdfNameD,urll)
+                                }
                                 getSupportActionBar()?.setTitle(pdfName)
                                 break
 
@@ -57,10 +68,21 @@ class viewPDF : AppCompatActivity() {
             )
 
 
+    }
 
 
 
     }
+
+    private fun downloadPDF(pdfName: String, urll: String) {
+        val downloadManager = getSystemService(DownloadManager:: class.java)
+        val request = DownloadManager.Request(urll.toUri())
+            .setMimeType("application/pdf")
+            .addRequestHeader("Authorization","Bearer <token>")
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,pdfName+".pdf")
+
+        downloadManager.enqueue(request)
     }
 
     class RetrievePDFFromURL(pdfView: PDFView) :

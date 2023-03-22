@@ -79,25 +79,27 @@ class pdfFrag : Fragment() {
                    for(userSnapshot in snapshot.children){
                        var pdfName: String = userSnapshot.key.toString()
                        pdfName = pdfName.replace(",pdf","")
-                       if(!PDFlist.contains(userData(null, null, pdfName, null))){
+                       if(!PDFlist.contains(userData(null, null, pdfName, null,null))){
                        PDFlist.add(
                             userData(
                                 null,
                                 null,
                                 pdfName,
+                                null,
                                 null
                             )
                        )
                    }
-                       val layoutManager = LinearLayoutManager(context)
-                       recyclerView = view.findViewById(R.id.pdfRec)
-                       recyclerView.layoutManager = layoutManager
-                       adapter = MyPDFAdapter(PDFlist)
-                       recyclerView.adapter = adapter
-                       progBar.visibility = View.INVISIBLE
-                       textView.visibility = View.INVISIBLE
 
                    }
+                   val layoutManager = LinearLayoutManager(context)
+                   recyclerView = view.findViewById(R.id.pdfRec)
+                   recyclerView.layoutManager = layoutManager
+                   adapter = MyPDFAdapter(PDFlist)
+                   recyclerView.adapter = adapter
+                   progBar.visibility = View.INVISIBLE
+                   textView.visibility = View.INVISIBLE
+
                    adapter.setOnItemClickListener(object : MyPDFAdapter.onItemClickListener{
                        override fun onItemClick(position: Int) {
 
