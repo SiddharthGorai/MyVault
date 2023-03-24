@@ -121,14 +121,15 @@
                 <TextView
                     android:id="@+id/forgetPass"
                     android:clickable="true"
-                    android:layout_width="match_parent"
+                    android:layout_gravity="end"
+                    android:gravity="center"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:text="Forgot Password?"
-                    android:textAlignment="textEnd"
                     android:textColor="#616161"
                     android:textSize="14sp"
-
                     android:textStyle="italic" />
             </LinearLayout>
 

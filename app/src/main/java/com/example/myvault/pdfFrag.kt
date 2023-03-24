@@ -131,38 +131,6 @@ class pdfFrag : Fragment() {
         })
 
 
-
-//        listALLTask.addOnCompleteListener { result ->
-//            val items: List<StorageReference> = result.result!!.items
-//            if (!items.isEmpty()) {
-//
-//                items.forEachIndexed { index, item ->
-//                    if(item.name.contains(".pdf")){
-//                        PDFlist.add(
-//                            userData(
-//                                null,
-//                                null,
-//                                item.name,
-//                                null
-//                            )
-//                        )
-//
-//                    }
-//                }
-////                val layoutManager = LinearLayoutManager(context)
-////                recyclerView = view.findViewById(R.id.pdfRec)
-////                recyclerView.layoutManager = layoutManager
-////                adapter = MyPDFAdapter(PDFlist)
-////                recyclerView.adapter   = adapter
-////                progBar.visibility = View.INVISIBLE
-////
-////            } else {
-////                textView.text = "No Pdf Found"
-////                textView.visibility = View.VISIBLE
-////                progBar.visibility = View.INVISIBLE
-////            }
-//
-//        }
     }
 
 

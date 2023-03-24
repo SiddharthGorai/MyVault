@@ -2,17 +2,24 @@ package com.example.myvault
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
+import android.app.ProgressDialog
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import java.io.BufferedInputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
@@ -23,7 +30,51 @@ class viewPDF : AppCompatActivity() {
 
     private lateinit var databaseRef1: DatabaseReference
     private val userID = FirebaseAuth.getInstance().currentUser!!.uid
+    private lateinit var delAlert: AlertDialog.Builder
+    private lateinit var storage: FirebaseStorage
+    private lateinit var dataBase: FirebaseDatabase
 
+    var menu: Menu? = null
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate((R.menu.delete), menu)
+        this.menu = menu
+        return true
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.del -> delPDF()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun delPDF() {
+        val bundleG = intent.extras
+        val pdfName = bundleG?.getString("pdfName")
+            delAlert = AlertDialog.Builder(this@viewPDF)
+            delAlert.setTitle("My Vault")
+                .setMessage("Do you want to delete $pdfName ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialogInterface, it ->
+                    storage = FirebaseStorage.getInstance()
+                    dataBase = FirebaseDatabase.getInstance()
+                    val dataRef = dataBase.getReference("PDFs").child(userID).child((pdfName + ",pdf"))
+                    val storeRef = storage.getReference("PDFs").child(userID).child((pdfName + ".pdf"))
+                    storeRef.delete().addOnSuccessListener {
+                        dataRef.removeValue()
+                        Toast.makeText(this,"Deleted Sucessfully",Toast.LENGTH_SHORT).show()
+                        finish()
+                    }.addOnFailureListener {
+                        Toast.makeText(this,it.toString(),Toast.LENGTH_SHORT).show()
+                    }
+
+                }.setNegativeButton("No") { dialogInterface, it ->
+                    dialogInterface.cancel()
+                }.show()
+
+
+    }
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +84,10 @@ class viewPDF : AppCompatActivity() {
         val pdfView: PDFView = findViewById(R.id.pdfView)
         val bundleG = intent.extras
         val downBtn : FloatingActionButton = findViewById(R.id.downPDfBtn)
+        val progressBar: ProgressBar = findViewById(R.id.progressBarViewpdf)
+        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
 
+        progressBar.visibility = View.VISIBLE
 
         if (bundleG != null){
             val pdfName = bundleG.getString("pdfName")
@@ -48,7 +102,7 @@ class viewPDF : AppCompatActivity() {
                                 var urll = userSnapshot.getValue().toString()
                                 urll = urll.replace("{url=","")
                                 urll = urll.replace("}","")
-                                RetrievePDFFromURL(pdfView).execute(urll)
+                                RetrievePDFFromURL(pdfView,progressBar).execute(urll)
                                 downBtn.setOnClickListener {
                                     downloadPDF(pdfNameD,urll)
                                 }
@@ -74,22 +128,30 @@ class viewPDF : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
     private fun downloadPDF(pdfName: String, urll: String) {
+        val pdfNamee = pdfName + ".jpg"
         val downloadManager = getSystemService(DownloadManager:: class.java)
         val request = DownloadManager.Request(urll.toUri())
             .setMimeType("application/pdf")
             .addRequestHeader("Authorization","Bearer <token>")
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,pdfName+".pdf")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,pdfNamee)
 
         downloadManager.enqueue(request)
+        Toast.makeText(this,"Saved to Downloads",Toast.LENGTH_SHORT).show()
     }
 
-    class RetrievePDFFromURL(pdfView: PDFView) :
+    class RetrievePDFFromURL(pdfView: PDFView,progressBar: ProgressBar) :
         AsyncTask<String, Void, InputStream>() {
 
         // on below line we are creating a variable for our pdf view.
         val mypdfView: PDFView = pdfView
+        val progD = progressBar
 
         // on below line we are calling our do in background method.
         override fun doInBackground(vararg params: String?): InputStream? {
@@ -130,6 +192,8 @@ class viewPDF : AppCompatActivity() {
             // on below line we are loading url within our
             // pdf view on below line using input stream.
             mypdfView.fromStream(result).load()
+            progD.visibility = View.INVISIBLE
+
         }
 
     }

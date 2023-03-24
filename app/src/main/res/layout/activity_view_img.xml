@@ -32,5 +32,18 @@
         app:layout_constraintVertical_bias="0.954"
         app:srcCompat="@drawable/baseline_download_24" />
 
+    <ProgressBar
+        android:layout_width="66dp"
+        android:id="@+id/pBarr"
+        android:layout_height="62dp"
+        android:visibility="gone"
+        android:indeterminateDrawable="@drawable/progress_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
