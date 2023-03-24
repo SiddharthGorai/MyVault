@@ -3,6 +3,7 @@ package com.example.myvault
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -64,7 +65,9 @@ class viewPDF : AppCompatActivity() {
                     storeRef.delete().addOnSuccessListener {
                         dataRef.removeValue()
                         Toast.makeText(this,"Deleted Sucessfully",Toast.LENGTH_SHORT).show()
-                        finish()
+                        val intent = Intent(this,userprofile::class.java)
+                        startActivity(intent)
+                        finishAffinity()
                     }.addOnFailureListener {
                         Toast.makeText(this,it.toString(),Toast.LENGTH_SHORT).show()
                     }

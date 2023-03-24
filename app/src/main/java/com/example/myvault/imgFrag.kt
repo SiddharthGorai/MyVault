@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -77,13 +78,11 @@ class imgFrag : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         init(view)
-//      getAllimg(view)
         val textView: TextView = view.findViewById(R.id.msgTxtI)
 
         val swipeRefreshLayoutt = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefImg)
         swipeRefreshLayoutt.setOnRefreshListener {
             textView.visibility = View.GONE
-//            getAllimg(view)
             init(view)
             swipeRefreshLayoutt.isRefreshing = false
         }
@@ -145,6 +144,7 @@ class imgFrag : Fragment() {
                             val intent = Intent (activity, viewIMG::class.java)
                             intent.putExtras(bundle)
                             startActivity(intent)
+
 
                         }
                     })

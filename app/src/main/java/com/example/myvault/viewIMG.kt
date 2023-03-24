@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,7 +62,9 @@ class viewIMG : AppCompatActivity() {
                 storeRef.delete().addOnSuccessListener {
                     dataRef.removeValue()
                     Toast.makeText(this,"Deleted Sucessfully",Toast.LENGTH_SHORT).show()
-                    finish()
+                    val intent = Intent(this,userprofile::class.java)
+                    startActivity(intent)
+                    finishAffinity()
                 }.addOnFailureListener {
                     Toast.makeText(this,it.toString(),Toast.LENGTH_SHORT).show()
                 }
