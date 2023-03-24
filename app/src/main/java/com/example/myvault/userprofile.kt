@@ -11,12 +11,16 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.example.myvault.Adapter.MyTabAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
@@ -39,21 +43,28 @@ class userprofile : AppCompatActivity() {
     var menu: Menu? = null
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate((R.menu.navbar), menu)
-        this.menu = menu
-        changeMenuBar()
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate((R.menu.navbar), menu)
+//        this.menu = menu
+//        changeMenuBar(menu)
+//        return true
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.signOut -> doThis()
+
+//        when (item.itemId) {
+//            R.id.signOut -> doThis()
+//        }
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
         }
+        else{
         return super.onOptionsItemSelected(item)
+    }
     }
 
     private fun doThis() {
@@ -73,7 +84,7 @@ class userprofile : AppCompatActivity() {
 
     }
 
-    private fun changeMenuBar() {
+    private fun changeMenuBar(menu: Menu?) {
         database = Firebase.database.reference
         database.child("User").child(userID).get().addOnSuccessListener {
             val uName = it.child("usrName").value.toString()
@@ -98,6 +109,24 @@ class userprofile : AppCompatActivity() {
         getSupportActionBar()?.setElevation(0F)
         getSupportActionBar()?.setBackgroundDrawable(ColorDrawable(getColor(R.color.pink)))
 
+        drawerLayout = findViewById(R.id.my_drawer_layout)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close)
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+
+        // to make the Navigation drawer icon always appear on the action bar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val navView: NavigationView = findViewById(R.id.navView)
+        val menu: Menu = navView.menu
+        changeMenuBar(menu)
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId){
+                R.id.signOut -> doThis()
+            }
+            true
+        }
 
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
