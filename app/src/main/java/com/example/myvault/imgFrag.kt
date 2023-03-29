@@ -150,6 +150,7 @@ class imgFrag : Fragment() {
                     })
                 }
                 else{
+
                 textView.text = "No Image Found"
                 textView.visibility = View.VISIBLE
                 progBar.visibility = View.INVISIBLE

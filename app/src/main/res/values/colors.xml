@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="txtColor">#ECE5EC</color>
     <color name="pink">#FF003B</color>
+    <color name="pink_light">#FB295A</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="underline">#BDB8B8</color>
+
 </resources>

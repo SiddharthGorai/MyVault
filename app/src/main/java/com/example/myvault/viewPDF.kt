@@ -1,27 +1,31 @@
 package com.example.myvault
 
 import android.annotation.SuppressLint
-import android.app.DownloadManager
 import android.app.ProgressDialog
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
+import android.os.Environment.getExternalStorageDirectory
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.net.toUri
 import com.github.barteksc.pdfviewer.PDFView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
@@ -34,6 +38,7 @@ class viewPDF : AppCompatActivity() {
     private lateinit var delAlert: AlertDialog.Builder
     private lateinit var storage: FirebaseStorage
     private lateinit var dataBase: FirebaseDatabase
+
 
     var menu: Menu? = null
 
@@ -136,17 +141,62 @@ class viewPDF : AppCompatActivity() {
         return true
     }
 
-    private fun downloadPDF(pdfName: String, urll: String) {
-        val pdfNamee = pdfName + ".jpg"
-        val downloadManager = getSystemService(DownloadManager:: class.java)
-        val request = DownloadManager.Request(urll.toUri())
-            .setMimeType("application/pdf")
-            .addRequestHeader("Authorization","Bearer <token>")
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,pdfNamee)
 
-        downloadManager.enqueue(request)
-        Toast.makeText(this,"Saved to Downloads",Toast.LENGTH_SHORT).show()
+    private fun downloadPDF(pdfNAME: String,pdfUrl:String){
+        val mProgDialog = ProgressDialog(this)
+        mProgDialog.setTitle("My Vault")
+        mProgDialog.setMessage("Downloading: $pdfNAME")
+        mProgDialog.setCancelable(false)
+        mProgDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgDialog.setIndeterminate(false)
+
+        val storage_Directory = "/Download"
+        val pdfNamee = pdfNAME + ".pdf"
+        val storageDirectory = getExternalStorageDirectory().toString() + storage_Directory + "/${pdfNamee}"
+        val file = File(getExternalStorageDirectory().toString() + storage_Directory)
+
+        if(!file.exists()){
+            file.mkdirs()
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            val url = URL(pdfUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
+            connection.setRequestProperty("Accept-Encoding","identity")
+            connection.connect()
+            if(connection.responseCode in 200 .. 299){
+                val filesize = connection.contentLength
+                val inputStream = connection.inputStream
+                val outputStream = FileOutputStream(storageDirectory)
+
+                var bytesCopied: Long = 0
+                var buffer = ByteArray(1024)
+                var bytes = inputStream.read(buffer)
+                while(bytes >= 0){
+                    bytesCopied += bytes
+                    val downloadProgress = (bytesCopied.toFloat() / filesize.toFloat() * 100).toInt()
+                    withContext(Dispatchers.Main){
+                        mProgDialog.setProgress(downloadProgress)
+                        mProgDialog.show()
+
+
+                    }
+                    outputStream.write(buffer,0,bytes)
+                    bytes = inputStream.read(buffer)
+
+                }
+                outputStream.close()
+                inputStream.close()
+                mProgDialog.dismiss()
+                Toast.makeText(this@viewPDF, "Downloaded", Toast.LENGTH_SHORT).show()
+
+                MediaScannerConnection.scanFile(this@viewPDF, arrayOf(file.toString()),
+                    null, null)
+
+            }
+
+        }
+
     }
 
     class RetrievePDFFromURL(pdfView: PDFView,progressBar: ProgressBar) :

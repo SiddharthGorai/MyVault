@@ -32,4 +32,5 @@
     <string name="textview">TextView</string>
     <string name="reset">Reset</string>
     <string name="delete">delete</string>
+    <string name="username">UserName</string>
 </resources>

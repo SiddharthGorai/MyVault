@@ -11,11 +11,9 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.example.myvault.Adapter.MyTabAdapter
@@ -85,6 +83,7 @@ class userprofile : AppCompatActivity() {
     }
 
     private fun changeMenuBar(menu: Menu?) {
+
         database = Firebase.database.reference
         database.child("User").child(userID).get().addOnSuccessListener {
             val uName = it.child("usrName").value.toString()
@@ -262,7 +261,8 @@ class userprofile : AppCompatActivity() {
                                     }
                                     .setNegativeButton("No") { dialogInterface, it ->
                                         dialogInterface.cancel()
-                                    }.show()
+                                    }
+                                    .show()
                             }
 
                         } finally {
@@ -274,7 +274,6 @@ class userprofile : AppCompatActivity() {
             }
 
         }
-
 
 
 
@@ -310,9 +309,7 @@ class userprofile : AppCompatActivity() {
                     pD.dismiss()
                 }
                 .addOnProgressListener {
-                    val progress: Long = (it.bytesTransferred /it.totalByteCount) * 100
                     pD.setMessage("Uploading..")
-//                    pD.setMessage(progress.toString() + "%")
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()

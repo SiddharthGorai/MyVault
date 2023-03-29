@@ -33,17 +33,34 @@
         app:srcCompat="@drawable/baseline_download_24" />
 
     <ProgressBar
-        android:layout_width="66dp"
         android:id="@+id/pBarr"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="66dp"
         android:layout_height="62dp"
-        android:visibility="gone"
-        android:indeterminateDrawable="@drawable/progress_bg"
+        android:background="@drawable/progress_circle_back"
+        android:elevation="10dp"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/download_progressbar"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/pText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="#101010"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/pBarr"
+        app:layout_constraintEnd_toEndOf="@+id/pBarr"
+        app:layout_constraintStart_toStartOf="@+id/pBarr"
+        app:layout_constraintTop_toTopOf="@+id/pBarr" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
