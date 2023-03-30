@@ -16,7 +16,13 @@
         android:visible="true"
         android:title="@string/email"
         app:showAsAction="never" />
-
+    <item
+        android:id="@+id/changePass"
+        android:checkable="false"
+        android:icon="@drawable/baseline_password_24"
+        android:title="@string/change_password"
+        android:visible="true"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/signOut"

@@ -11,6 +11,8 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -123,6 +125,7 @@ class userprofile : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
             when (it.itemId){
                 R.id.signOut -> doThis()
+                R.id.changePass -> changePassword(menu)
             }
             true
         }
@@ -178,8 +181,41 @@ class userprofile : AppCompatActivity() {
 
     }
 
+    private fun changePassword(menu: Menu) {
 
-        @Deprecated("Deprecated in Java")
+            val uBar = findViewById<ProgressBar>(R.id.uBar)
+            uBar.visibility = View.VISIBLE
+
+            val auth = Firebase.auth
+            val dEmail = menu.findItem(R.id.demail)
+
+            val uEmail = dEmail.title.toString()
+
+
+            auth.sendPasswordResetEmail(uEmail.trim())
+                .addOnSuccessListener {
+                    uBar.visibility = View.INVISIBLE
+                    val alertDialog = AlertDialog.Builder(this)
+                    alertDialog.setTitle("MyVault")
+                        .setCancelable(true)
+                        .setMessage("A password change link has been sent to your eamil.")
+                        .setNegativeButton("Ok") { dialogInterface, it ->
+                            dialogInterface.cancel()
+                        }.show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+
+
+    }
+
+
+
+
+
+    @Deprecated("Deprecated in Java")
         @SuppressLint("Range")
         override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
             super.onActivityResult(requestCode, resultCode, data)

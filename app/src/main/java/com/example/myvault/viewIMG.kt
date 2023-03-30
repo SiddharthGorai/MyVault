@@ -112,18 +112,7 @@ class viewIMG : AppCompatActivity() {
         return true
     }
 
-//    private fun downloadImg(nameUrl: String,imgNAME: String) {
-//        val downloadManager = getSystemService(DownloadManager:: class.java)
-//        val request = DownloadManager.Request(nameUrl.toUri())
-//            .setMimeType("image/jpg")
-//            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-//            .addRequestHeader("Authorization","Bearer <token>")
-//            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,imgNAME)
-//        downloadManager.enqueue(request)
-//        pbarr.visibility = View.GONE
-//        Toast.makeText(this,"Downloading Started",Toast.LENGTH_SHORT).show()
-//
-//    }
+
     private fun downloadImg(nameUrl:String,imgNAME: String){
 
         val mProgDialog = ProgressDialog(this)

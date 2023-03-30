@@ -33,4 +33,5 @@
     <string name="reset">Reset</string>
     <string name="delete">delete</string>
     <string name="username">UserName</string>
+    <string name="change_password">Change Password</string>
 </resources>

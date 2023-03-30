@@ -11,9 +11,12 @@
     android:layout_height="150dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="120dp"
+        android:id="@+id/userImg"
+        android:clickable="true"
         android:layout_height="120dp"
         android:layout_margin="15dp"
-        android:src="@drawable/ava"/>
+        android:src="@drawable/ava"
+        android:focusable="true" />
 </LinearLayout>
 
 </LinearLayout>
