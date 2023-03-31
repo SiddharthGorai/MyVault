@@ -188,10 +188,13 @@ class viewPDF : AppCompatActivity() {
                 outputStream.close()
                 inputStream.close()
                 mProgDialog.dismiss()
-                Toast.makeText(this@viewPDF, "Downloaded", Toast.LENGTH_SHORT).show()
 
                 MediaScannerConnection.scanFile(this@viewPDF, arrayOf(file.toString()),
                     null, null)
+                withContext(Dispatchers.Main){
+                    Toast.makeText(this@viewPDF, "Saved to Downloads", Toast.LENGTH_SHORT).show()
+                }
+
 
             }
 

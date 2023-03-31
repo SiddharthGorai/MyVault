@@ -159,6 +159,9 @@ class viewIMG : AppCompatActivity() {
                 inputStream.close()
                 MediaScannerConnection.scanFile(this@viewIMG, arrayOf(file.toString()),
                     null, null)
+                withContext(Dispatchers.Main){
+                    Toast.makeText(this@viewIMG, "Saved to Downloads", Toast.LENGTH_SHORT).show()
+                }
                 mProgDialog.dismiss()
             }
 
